@@ -1,0 +1,81 @@
+## Docker Compose file to set up three services: PostgreSQL, MongoDB, and MinIO
+## Each section below explains what the line does in simple terms
+version: "3.8"
+## Use version 3.8 of Docker Compose syntax
+services:
+## Define the services (containers) to run
+  postgres:
+  ## This service runs a PostgreSQL database
+    image: postgres:15
+    ## Use the official PostgreSQL version 15 image
+    container_name: mini_onbase_postgres
+    ## Name the container 'mini_onbase_postgres' for easy reference
+    environment:
+    ## Set environment variables for the database
+      POSTGRES_USER: miniuser
+      ## The username for the database
+      POSTGRES_PASSWORD: minipassword
+      ## The password for the database
+      POSTGRES_DB: mini_onbase_auth
+      TZ: Asia/Kolkata
+      ## The name of the database to create
+    ports:
+    ## Map port 5432 on your computer to port 5432 in the container
+      - "5432:5432"
+    volumes:
+    ## Store database files on your computer so data is not lost when container stops
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+    ## Check if the database is ready to use
+      test: ["CMD-SHELL", "pg_isready -U miniuser"]
+      ## Run a command to see if PostgreSQL is accepting connections
+      interval: 5s
+      ## Check every 5 seconds
+      timeout: 5s
+      ## Wait up to 5 seconds for a response
+      retries: 5
+      ## Try 5 times before reporting unhealthy
+
+  mongo:
+  ## This service runs a MongoDB database
+    image: mongo:6
+    ## Use the official MongoDB version 6 image
+    container_name: mini_onbase_mongo
+    ## Name the container 'mini_onbase_mongo'
+    ports:
+    ## Map port 27017 on your computer to port 27017 in the container
+      - "27017:27017"
+    volumes:
+    ## Store MongoDB data on your computer
+      - mongodata:/data/db
+
+  minio:
+  ## This service runs MinIO, an object storage server (like Amazon S3)
+    image: minio/minio:latest
+    ## Use the latest MinIO image
+    container_name: mini_onbase_minio
+    ## Name the container 'mini_onbase_minio'
+    environment:
+    ## Set environment variables for MinIO
+      MINIO_ROOT_USER: minioadmin
+      ## The username for MinIO
+      MINIO_ROOT_PASSWORD: minioadmin123
+      ## The password for MinIO
+    command: server /data
+    ## Start MinIO and tell it to use the /data folder for storage
+    ports:
+    ## Map ports 9000 and 9001 for web access and admin
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+    ## Store MinIO data on your computer
+      - miniodata:/data
+
+volumes:
+## Define named volumes to persist data for each service
+  pgdata:
+  ## Volume for PostgreSQL data
+  mongodata:
+  ## Volume for MongoDB data
+  miniodata:
+  ## Volume for MinIO data
