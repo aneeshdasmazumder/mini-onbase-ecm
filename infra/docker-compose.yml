@@ -79,3 +79,6 @@ volumes:
   ## Volume for MongoDB data
   miniodata:
   ## Volume for MinIO data
+
+# $env:JAVA_TOOL_OPTIONS = "-Duser.timezone=Asia/Kolkata"
+# mvn spring-boot:run

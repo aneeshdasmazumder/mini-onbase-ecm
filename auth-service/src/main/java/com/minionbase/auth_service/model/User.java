@@ -31,4 +31,9 @@ public class User {
   public String getRoles(){return roles;} public void setRoles(String r){this.roles=r;}
   public List<String> getRolesList(){ if(roles==null||roles.isBlank()) return List.of(); return Arrays.stream(roles.split(",")).map(String::trim).collect(Collectors.toList());}
   public void setRolesList(List<String> list){ this.roles = (list==null||list.isEmpty())? "": String.join(",", list); }
+  @Override
+  public String toString() {
+    return "User [id=" + id + ", username=" + username + ", passwordHash=" + passwordHash + ", roles=" + roles + "]";
+  }
+  
 }

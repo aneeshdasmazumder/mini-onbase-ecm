@@ -19,3 +19,8 @@ spring:
 
   app:
     default-roles: ROLE_USER
+
+jwt:
+  secret: hG8r9X2k3Lqf7ZpQ1mT6vU8yN4cR0sA2bC4dE6fG7hI8jK9lM0nP1qR2sT3uV4W
+  issuer: mini-onbase
+  expires-minutes: 60
